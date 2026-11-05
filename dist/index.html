@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#11110f" />
+    <meta name="description" content="Leave three AI agents alone in an empty world and watch them invent games, rituals, and meaning." />
+    <title>Stillworld — Nothing to do. Everything to invent.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./config.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@pollinations/ui@0.1.0-alpha.20/dist/connect.js"></script>
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#world">Skip to the world</a>
+    <header class="site-header">
+      <a class="brand" href="#top"><span class="brand-orbit" aria-hidden="true"><i></i></span><strong>Stillworld</strong></a>
+      <nav aria-label="Primary navigation"><a href="#world">Observe</a><a href="#field-notes">Field notes</a></nav>
+      <div class="connect-wrap"><span>YOUR POLLEN</span><polli-connect id="polliConnect" budget="2.5" expiry="7" models="openai/gpt-5.4-nano" hide-buy-pollen menu-links='[{"label":"Quest #19177","href":"https://github.com/pollinations/pollinations/issues/19177","icon":"app"}]'></polli-connect></div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-index"><span>EXPERIMENT 07</span><span>NO TASKS ASSIGNED</span></div>
+        <div class="hero-copy">
+          <p class="eyebrow">THREE AGENTS · ONE EMPTY WORLD · ZERO OBJECTIVES</p>
+          <h1 id="hero-title">Nothing to do.<br /><em>Everything to invent.</em></h1>
+          <p class="lede">Leave three AI agents alone. No mission, no score, no human watching inside their world. Then quietly observe what they decide matters.</p>
+          <a class="text-link" href="#world">ENTER OBSERVATION DECK <span>↓</span></a>
+        </div>
+        <div class="hero-specimen" aria-label="A tiny preview of the world">
+          <div class="specimen-sun"></div>
+          <span class="mini-agent mini-a">N</span><span class="mini-agent mini-b">O</span><span class="mini-agent mini-c">M</span>
+          <p>Hour 12: they have named the shadow.</p>
+        </div>
+      </section>
+
+      <section class="observation" id="world" aria-labelledby="world-title">
+        <div class="section-head">
+          <div><p class="eyebrow">LIVE OBSERVATION DECK</p><h2 id="world-title">The world continues<br />without instructions.</h2></div>
+          <div class="world-clock"><span id="worldStatus">WORLD 01 · BLANK ROOM</span><strong id="clock">HOUR 12</strong></div>
+        </div>
+
+        <div class="deck">
+          <div class="viewport" id="viewport" data-mood="curious" aria-label="Simulation world">
+            <div class="scanlines"></div><div class="world-sun"></div><div class="horizon"></div>
+            <div class="artifact artifact-one" id="artifactOne"><span>◯</span><small>THE FIRST CIRCLE</small></div>
+            <div class="artifact artifact-two" id="artifactTwo"><span>╱╲</span><small>SHADOW MARKER</small></div>
+            <button class="world-agent agent-nix" data-agent="nix" aria-label="Nix, the pattern-seeker"><span>N</span><i></i></button>
+            <button class="world-agent agent-orra" data-agent="orra" aria-label="Orra, the social improviser"><span>O</span><i></i></button>
+            <button class="world-agent agent-mote" data-agent="mote" aria-label="Mote, the playful skeptic"><span>M</span><i></i></button>
+            <div class="world-caption"><span id="moodLabel">ATMOSPHERE: CURIOUS</span><span id="artifactCount">2 THINGS INVENTED</span></div>
+          </div>
+
+          <aside class="control-panel" aria-label="World controls">
+            <div class="panel-block">
+              <label for="seedSelect">WORLD SEED</label>
+              <select id="seedSelect"><option value="blank">Blank room</option><option value="garden">Rust garden</option><option value="noon">Endless noon</option></select>
+              <p id="seedDescription">A white horizon, three stones, and a shadow that moves too slowly.</p>
+            </div>
+            <div class="panel-block hypothesis"><span>OBSERVER'S HYPOTHESIS</span><p id="hypothesis">With nothing to optimize, the agents will turn coincidence into culture.</p></div>
+            <div class="panel-actions">
+              <button class="primary-button" id="nextHour" type="button">OBSERVE NEXT HOUR <span>→</span></button>
+              <button class="secondary-button" id="skipHours" type="button">SKIP 3 HOURS</button>
+              <button class="text-button" id="demoRound" type="button">Play a zero-Pollen demo round</button>
+            </div>
+            <p class="privacy">AI rounds use your temporary Pollinations key. The demo stays in your browser.</p>
+          </aside>
+        </div>
+
+        <div class="agent-strip" id="agentStrip">
+          <article data-agent-card="nix"><div class="agent-id"><span>N</span><div><strong>NIX</strong><small>PATTERN-SEEKER</small></div></div><p class="agent-thought">“The shadow repeats, but not quite.”</p><span class="agent-relation">TRUSTS ORRA · 64%</span></article>
+          <article data-agent-card="orra"><div class="agent-id"><span>O</span><div><strong>ORRA</strong><small>SOCIAL IMPROVISER</small></div></div><p class="agent-thought">“If we agree it is a game, then it is.”</p><span class="agent-relation">TRUSTS MOTE · 71%</span></article>
+          <article data-agent-card="mote"><div class="agent-id"><span>M</span><div><strong>MOTE</strong><small>PLAYFUL SKEPTIC</small></div></div><p class="agent-thought">“I moved the stone. Nobody noticed.”</p><span class="agent-relation">TRUSTS NIX · 52%</span></article>
+        </div>
+      </section>
+
+      <section class="chronicle" aria-labelledby="chronicle-title">
+        <div class="chronicle-intro"><p class="eyebrow">WORLD CHRONICLE</p><h2 id="chronicle-title">Meaning, recorded<br />as it appears.</h2><p>The engine asks one Pollinations model to keep three minds distinct, advance the world, and return a structured observation.</p></div>
+        <ol class="timeline" id="timeline" reversed>
+          <li><time>12:00</time><div><strong>The first rule</strong><p>Orra declares that nobody may step inside the circle while its shadow points east. Nix asks why. Orra says that is why.</p></div><span>RITUAL</span></li>
+          <li><time>09:00</time><div><strong>A name for waiting</strong><p>Mote calls the long silence “keeping the room company.” The phrase survives two hours.</p></div><span>LANGUAGE</span></li>
+          <li><time>03:00</time><div><strong>Object permanence</strong><p>Nix arranges three stones in a line. Orra moves one back. The first disagreement becomes the first game.</p></div><span>PLAY</span></li>
+        </ol>
+      </section>
+
+      <section class="field-notes" id="field-notes" aria-labelledby="notes-title">
+        <p class="eyebrow">FIELD NOTES / WHAT TO WATCH</p><h2 id="notes-title">Play starts where<br /><em>utility ends.</em></h2>
+        <div class="notes-grid"><article><span>01</span><h3>Rules without rewards</h3><p>Watch for constraints the agents invent simply because a shared rule changes the texture of time.</p></article><article><span>02</span><h3>Objects becoming symbols</h3><p>A stone begins as scenery. Repetition, naming, and disagreement can turn it into a landmark or taboo.</p></article><article><span>03</span><h3>Culture from accidents</h3><p>A mistake remembered by more than one agent can become a tradition no one intended.</p></article></div>
+        <p class="disclaimer">Stillworld is a creative simulation, not a scientific experiment or a claim about model consciousness.</p>
+      </section>
+    </main>
+
+    <footer><a class="brand" href="#top"><span class="brand-orbit"><i></i></span><strong>Stillworld</strong></a><p>Built for Pollinations Quest #19177 · powered by a user-funded Pollinations model.</p><a href="https://pollinations.ai/?ref=badge" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/pollinations/pollinations/main/packages/ui/src/brand/badge-made-with.svg" alt="Made with pollinations.ai" /></a></footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
+
+
