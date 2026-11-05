@@ -75,5 +75,3 @@ $("#skipHours").addEventListener("click", () => observe(3));
 $("#demoRound").addEventListener("click", () => observe(1, true));
 $("#seedSelect").addEventListener("change", (event) => resetSeed(event.target.value));
 document.querySelectorAll(".world-agent").forEach((button) => button.addEventListener("click", () => { const card = $(`[data-agent-card="${button.dataset.agent}"]`); card.scrollIntoView({ behavior: "smooth", block: "center" }); card.animate([{ background: "rgba(216,255,62,.16)" }, { background: "transparent" }], { duration: 900 }); }));
-
-

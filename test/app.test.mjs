@@ -22,5 +22,3 @@ test("includes a zero-Pollen local demo and clear disclaimer", () => {
   assert.match(html, /zero-Pollen demo round/);
   assert.match(html, /not a scientific experiment/);
 });
-
-
