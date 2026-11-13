@@ -10,7 +10,6 @@ test("uses capped Bring Your Own Pollen for Quest 19177", () => {
   assert.match(html, /budget="2\.5"/);
   assert.match(html, /Quest #19177/);
 });
-
 test("runs the world through a Pollinations model", () => {
   assert.match(js, /gen\.pollinations\.ai\/v1\/chat\/completions/);
   assert.match(js, /openai\/gpt-5\.4-nano/);
@@ -21,4 +20,16 @@ test("includes a zero-Pollen local demo and clear disclaimer", () => {
   assert.match(js, /DEMO_ROUNDS/);
   assert.match(html, /zero-Pollen demo round/);
   assert.match(html, /not a scientific experiment/);
+});
+
+test("requires a real user action before starting a paid round", () => {
+  assert.match(js, /nextHour.*event\.isTrusted/s);
+  assert.match(js, /skipHours.*event\.isTrusted/s);
+  assert.match(html, /Only a direct button press can start a paid round/);
+});
+
+test("carries recent world memory into later model rounds", () => {
+  assert.match(js, /Recent world memory/);
+  assert.match(js, /state\.history\.push/);
+  assert.match(js, /Preserve invented names, rituals, relationships/);
 });

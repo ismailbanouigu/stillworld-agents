@@ -23,7 +23,7 @@ const DEMO_ROUNDS = [
     { id: "mote", thought: "Next time I will clap before we begin.", action: "Practices ending things early.", relation: "TRUSTS NIX · 58%" }
   ]}
 ];
-let state = { seed: "blank", hour: 12, artifacts: 2, demoIndex: 0, busy: false };
+let state = { seed: "blank", hour: 12, artifacts: 2, demoIndex: 0, busy: false, history: [] };
 
 if (/^pk_[A-Za-z0-9_-]+$/.test(appKey) && !appKey.includes("REPLACE")) connect.setAttribute("app-key", appKey);
 
@@ -48,8 +48,11 @@ function parseResponse(raw) {
 
 async function askWorld(steps) {
   const seed = SEEDS[state.seed];
+  const recentHistory = state.history.length
+    ? state.history.slice(-8).map((entry, index) => `${index + 1}. ${entry}`).join("\n")
+    : "No prior generated events. The visible specimen is only the observation deck's opening context.";
   const system = `You are the world engine for a creative simulation called Stillworld. Three distinct agents are left alone with no task, score, threat or human instructions. Nix seeks patterns, Orra improvises social rules, and Mote is a playful skeptic. Advance their small culture through games, rituals, language, harmless disagreements or objects gaining symbolic meaning. Never discuss consciousness as fact. Keep events whimsical, specific and safe. Return ONLY JSON: {"rounds":[{"summary":"one sentence event","worldMood":"curious|electric|uneasy","agents":[{"id":"nix","thought":"short first-person thought","action":"visible action","relation":"TRUSTS ORRA · 64%"},{"id":"orra","thought":"...","action":"...","relation":"..."},{"id":"mote","thought":"...","action":"...","relation":"..."}],"artifact":{"name":"short name","description":"one sentence","symbol":"1-3 simple characters"}}]}. Return exactly ${steps} round${steps === 1 ? "" : "s"}.`;
-  const prompt = `World seed: ${seed.name}. Setting: ${seed.description}. Current hour: ${state.hour}. Existing artifacts: ${state.artifacts}. Continue without giving them a mission.`;
+  const prompt = `World seed: ${seed.name}. Setting: ${seed.description}. Current hour: ${state.hour}. Existing artifacts: ${state.artifacts}.\nRecent world memory:\n${recentHistory}\nContinue this shared history without giving the agents a mission. Preserve invented names, rituals, relationships, and unresolved disagreements when relevant.`;
   const response = await fetch("https://gen.pollinations.ai/v1/chat/completions", { method: "POST", headers: { Authorization: `Bearer ${connect.apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify({ model: "openai/gpt-5.4-nano", reasoning_effort: "low", temperature: 0.95, max_tokens: 2200, messages: [{ role: "system", content: system }, { role: "user", content: prompt }] }) });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload?.error?.message || payload?.message || `World engine failed (${response.status})`);
@@ -65,13 +68,17 @@ function renderRound(round) {
   $("#clock").textContent = `HOUR ${state.hour}`; $("#artifactCount").textContent = `${state.artifacts} THINGS INVENTED`; $("#moodLabel").textContent = `ATMOSPHERE: ${round.worldMood.toUpperCase()}`; $("#viewport").dataset.mood = round.worldMood;
   round.agents.forEach((agent, index) => { const card = $(`[data-agent-card="${agent.id}"]`); card.querySelector(".agent-thought").textContent = `“${agent.thought}”`; card.querySelector(".agent-relation").textContent = agent.relation; const avatar = $(`[data-agent="${agent.id}"]`); avatar.style.transform = `translate(${(index - 1) * 18 + Math.round(Math.random() * 20)}px, ${Math.round(Math.random() * 18) - 9}px)`; });
   if (round.artifact) { const slot = state.artifacts % 2 ? $("#artifactOne") : $("#artifactTwo"); slot.querySelector("span").textContent = round.artifact.symbol; slot.querySelector("small").textContent = round.artifact.name.toUpperCase(); slot.title = round.artifact.description; }
+  const agentMemory = round.agents.map((agent) => `${agent.id}: ${agent.action} (${agent.relation})`).join("; ");
+  const artifactMemory = round.artifact ? ` Artifact: ${round.artifact.name} — ${round.artifact.description}` : "";
+  state.history.push(`Hour ${state.hour}: ${round.summary} ${agentMemory}.${artifactMemory}`);
+  state.history = state.history.slice(-12);
   addChronicle(round);
 }
 async function observe(steps, demo = false) { if (state.busy) return; if (!demo && !connect.apiKey) { toast("Connect your Pollinations wallet to let the agents continue."); return; } setBusy(true); try { const rounds = demo ? Array.from({ length: steps }, (_, i) => DEMO_ROUNDS[(state.demoIndex + i) % DEMO_ROUNDS.length]) : await askWorld(steps); rounds.forEach(renderRound); state.demoIndex += steps; toast(demo ? "Demo hour added — zero Pollen used." : `${steps} world hour${steps > 1 ? "s" : ""} observed.`); } catch (error) { toast(error.message || "The world went quiet. Try again."); } finally { setBusy(false); } }
-function resetSeed(seedKey) { const seed = SEEDS[seedKey]; state = { seed: seedKey, hour: 0, artifacts: 0, demoIndex: 0, busy: false }; $("#worldStatus").textContent = `WORLD 01 · ${seed.name}`; $("#seedDescription").textContent = seed.description; $("#hypothesis").textContent = seed.hypothesis; $("#viewport").dataset.mood = seed.mood; $("#clock").textContent = "HOUR 00"; $("#artifactCount").textContent = "0 THINGS INVENTED"; $("#moodLabel").textContent = `ATMOSPHERE: ${seed.mood.toUpperCase()}`; toast(`${seed.name.toLowerCase()} initialized.`); }
+function resetSeed(seedKey) { const seed = SEEDS[seedKey]; state = { seed: seedKey, hour: 0, artifacts: 0, demoIndex: 0, busy: false, history: [] }; $("#worldStatus").textContent = `WORLD 01 · ${seed.name}`; $("#seedDescription").textContent = seed.description; $("#hypothesis").textContent = seed.hypothesis; $("#viewport").dataset.mood = seed.mood; $("#clock").textContent = "HOUR 00"; $("#artifactCount").textContent = "0 THINGS INVENTED"; $("#moodLabel").textContent = `ATMOSPHERE: ${seed.mood.toUpperCase()}`; toast(`${seed.name.toLowerCase()} initialized.`); }
 
-$("#nextHour").addEventListener("click", () => observe(1));
-$("#skipHours").addEventListener("click", () => observe(3));
+$("#nextHour").addEventListener("click", (event) => { if (!event.isTrusted) return; observe(1); });
+$("#skipHours").addEventListener("click", (event) => { if (!event.isTrusted) return; observe(3); });
 $("#demoRound").addEventListener("click", () => observe(1, true));
 $("#seedSelect").addEventListener("change", (event) => resetSeed(event.target.value));
 document.querySelectorAll(".world-agent").forEach((button) => button.addEventListener("click", () => { const card = $(`[data-agent-card="${button.dataset.agent}"]`); card.scrollIntoView({ behavior: "smooth", block: "center" }); card.animate([{ background: "rgba(216,255,62,.16)" }, { background: "transparent" }], { duration: 900 }); }));

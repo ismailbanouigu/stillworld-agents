@@ -12,10 +12,11 @@ Built for [Pollinations Quest #19177](https://github.com/pollinations/pollinatio
 
 ## Features
 
-- Three persistent personalities with changing thoughts, actions, and relationships.
+- Three persistent personalities with changing thoughts, actions, and relationships carried through a rolling in-session world memory.
 - Three world seeds and a living chronicle of emergent events.
 - One- or three-hour model-powered observations using Bring Your Own Pollen.
 - A zero-Pollen local demo for instant review.
+- Paid model rounds require a direct, trusted user click; scripted clicks cannot spend the visitor's Pollen.
 - No stored prompts, keys, or world state.
 
 Stillworld is a creative simulation, not a scientific experiment or a claim about model consciousness.
